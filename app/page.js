@@ -5,8 +5,8 @@ export default function Home() {
   const [items, setItems] = useState([]);
   const [name, setName] = useState("");
   const [qty, setQty] = useState("");
+  const [search, setSearch] = useState("");
 
-  // โหลดข้อมูลจาก localStorage ตอนเปิดเว็บ
   useEffect(() => {
     const saved = localStorage.getItem("stockItems");
     if (saved) {
@@ -14,7 +14,6 @@ export default function Home() {
     }
   }, []);
 
-  // บันทึกทุกครั้งที่ items เปลี่ยน
   useEffect(() => {
     localStorage.setItem("stockItems", JSON.stringify(items));
   }, [items]);
@@ -43,7 +42,11 @@ export default function Home() {
     setItems(newItems);
   };
 
-  const totalItems = items.reduce(
+  const filteredItems = items.filter((item) =>
+    item.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const totalItems = filteredItems.reduce(
     (sum, item) => sum + Number(item.qty),
     0
   );
@@ -78,11 +81,19 @@ export default function Home() {
           </button>
         </div>
 
-        {items.length === 0 ? (
-          <p className="text-gray-500 text-center">ยังไม่มีสินค้า</p>
+        <input
+          type="text"
+          placeholder="🔍 ค้นหาสินค้า"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full border p-2 rounded mb-4"
+        />
+
+        {filteredItems.length === 0 ? (
+          <p className="text-gray-500 text-center">ไม่พบสินค้า</p>
         ) : (
           <div className="space-y-2">
-            {items.map((item, index) => (
+            {filteredItems.map((item, index) => (
               <div
                 key={index}
                 className="flex justify-between items-center bg-gray-100 p-2 rounded"
@@ -110,7 +121,7 @@ export default function Home() {
         )}
 
         <p className="mt-4 font-bold text-center">
-          จำนวนสินค้าทั้งหมด: {totalItems}
+          จำนวนสินค้าทั้งหมด (ที่ค้นพบ): {totalItems}
         </p>
       </div>
     </div>
