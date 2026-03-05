@@ -23,9 +23,8 @@ export default function Home() {
     if (!name || !qty) return;
 
     const newItem = {
-      id: Date.now(),
       name,
-      qty: parseInt(qty),
+      qty,
     };
 
     setItems([...items, newItem]);
@@ -33,69 +32,87 @@ export default function Home() {
     setQty("");
   };
 
-  const deleteItem = (id) => {
-    setItems(items.filter((item) => item.id !== id));
+  const deleteItem = (index) => {
+    const newItems = items.filter((_, i) => i !== index);
+    setItems(newItems);
   };
 
+  const updateQty = (index, newQty) => {
+    const newItems = [...items];
+    newItems[index].qty = newQty;
+    setItems(newItems);
+  };
+
+  const totalItems = items.reduce(
+    (sum, item) => sum + Number(item.qty),
+    0
+  );
+
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-xl mx-auto bg-white shadow-xl rounded-2xl p-6">
-        <h1 className="text-3xl font-bold mb-6 text-center">
+    <div className="min-h-screen flex items-center justify-center bg-gray-200 p-4">
+      <div className="bg-white p-6 rounded-2xl shadow-md w-full max-w-md">
+        <h1 className="text-2xl font-bold mb-4 text-center">
           📦 Stock System
         </h1>
 
-        {/* Form */}
-        <div className="flex gap-2 mb-6">
+        <div className="flex gap-2 mb-4">
           <input
-            className="flex-1 border rounded-lg p-2"
+            type="text"
             placeholder="ชื่อสินค้า"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            className="flex-1 border p-2 rounded"
           />
           <input
-            className="w-24 border rounded-lg p-2"
             type="number"
             placeholder="จำนวน"
             value={qty}
             onChange={(e) => setQty(e.target.value)}
+            className="w-20 border p-2 rounded text-center"
           />
           <button
             onClick={addItem}
-            className="bg-blue-600 text-white px-4 rounded-lg hover:bg-blue-700"
+            className="bg-blue-600 text-white px-4 py-2 rounded"
           >
             เพิ่ม
           </button>
         </div>
 
-        {/* List */}
-        <div className="space-y-3">
-          {items.length === 0 && (
-            <p className="text-gray-500 text-center">ยังไม่มีสินค้า</p>
-          )}
-
-          {items.map((item) => (
-            <div
-              key={item.id}
-              className="flex justify-between items-center bg-gray-50 p-3 rounded-lg"
-            >
-              <div>
-                <p className="font-semibold">{item.name}</p>
-                <p className="text-sm text-gray-500">
-                  จำนวน: {item.qty}
-                </p>
-              </div>
-
-              <button
-                onClick={() => deleteItem(item.id)}
-                className="text-red-500 hover:text-red-700"
+        {items.length === 0 ? (
+          <p className="text-gray-500 text-center">ยังไม่มีสินค้า</p>
+        ) : (
+          <div className="space-y-2">
+            {items.map((item, index) => (
+              <div
+                key={index}
+                className="flex justify-between items-center bg-gray-100 p-2 rounded"
               >
-                ลบ
-              </button>
-            </div>
-          ))}
-        </div>
+                <span>{item.name}</span>
+
+                <input
+                  type="number"
+                  value={item.qty}
+                  onChange={(e) =>
+                    updateQty(index, e.target.value)
+                  }
+                  className="w-16 border rounded text-center"
+                />
+
+                <button
+                  onClick={() => deleteItem(index)}
+                  className="bg-red-500 text-white px-2 py-1 rounded"
+                >
+                  ลบ
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <p className="mt-4 font-bold text-center">
+          จำนวนสินค้าทั้งหมด: {totalItems}
+        </p>
       </div>
     </div>
   );
 }
-
