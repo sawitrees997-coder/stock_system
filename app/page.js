@@ -35,6 +35,17 @@ export default function Home() {
     const newItems = items.filter((_, i) => i !== index);
     setItems(newItems);
   };
+  const clearAll = () => {
+  if (confirm("คุณแน่ใจหรือไม่ว่าต้องการลบสินค้าทั้งหมด?")) {
+    setItems([]);
+  }
+};
+  <button
+  onClick={clearAll}
+  className="mt-4 w-full bg-red-600 text-white py-2 rounded"
+>
+  ลบสินค้าทั้งหมด
+</button>
 
   const updateQty = (index, newQty) => {
     const newItems = [...items];
