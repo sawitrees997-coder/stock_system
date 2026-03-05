@@ -1,47 +1,20 @@
-"use client";
-import { useState } from "react";
-
-export default function Home() {
-  const [items, setItems] = useState([]);
-  const [name, setName] = useState("");
-  const [qty, setQty] = useState("");
-
-  const addItem = () => {
-    if (!name || !qty) return;
-    setItems([...items, { name, qty }]);
-    setName("");
-    setQty("");
-  };
-
-  return (
-    <div style={{ padding: 20 }}>
-      <h1>Stock System 📦</h1>
-
-      <div style={{ marginBottom: 20 }}>
-        <input
-          placeholder="ชื่อสินค้า"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          placeholder="จำนวน"
-          type="number"
-          value={qty}
-          onChange={(e) => setQty(e.target.value)}
-          style={{ marginLeft: 10 }}
-        />
-        <button onClick={addItem} style={{ marginLeft: 10 }}>
-          เพิ่มสินค้า
-        </button>
-      </div>
-
-      <ul>
-        {items.map((item, index) => (
-          <li key={index}>
-            {item.name} - {item.qty} ชิ้น
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+{
+  "name": "stock_system",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "14.1.0",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0",
+    "postcss": "^8.4.0",
+    "autoprefixer": "^10.4.0"
+  }
 }
